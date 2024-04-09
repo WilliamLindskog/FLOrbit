@@ -22,4 +22,5 @@ strategy:
 
 client:
   batch_size: 32
-  task: 
+  task: ${task}
+  client_type: None

@@ -234,8 +234,6 @@ def dynamic_configuration(cfg: DictConfig) -> DictConfig:
     cfg.model._target_ = TARGETS[cfg.model.name]["path"]
 
     # Add client target path
-    cfg.client._target_ = TARGETS[cfg.model.name]["client_type"]
-
-    
+    cfg.client.client_type = TARGETS[cfg.model.name]["client_type"]
 
     return cfg

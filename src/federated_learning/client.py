@@ -30,6 +30,25 @@ class NetClient(fl.client.NumPyClient):
         device: torch.device,
         cfg: DictConfig,
     ) -> None:
+        """Create a new Flower client.
+        
+        Parameters
+        ----------
+        net : torch.nn.Module
+            The neural network model.
+        data : FederatedDataset
+            The federated dataset.
+        cid : str
+            The client ID.
+        device : torch.device
+            The device to use.
+        cfg : DictConfig
+            The configuration file.
+
+        Returns
+        -------
+        None
+        """
         self.net = net
         self.device = device
         self.cid = int(cid)
@@ -69,15 +88,15 @@ class NetClient(fl.client.NumPyClient):
     
 
 def get_client_fn(
-    data: FederatedDataset,
+    data: Union[FederatedDataset,],
     cfg: DictConfig,
 ) -> Callable[[str], Union[NetClient,]]:  # pylint: disable=too-many-arguments
     """Generate the client function that creates the FedAvg flower clients.
 
     Parameters
     ----------
-    fds : FederatedDataset
-        The federated dataset object that contains the data, can be partitioned. 
+    data : Union[FederatedDataset,]
+        The federated dataset.
     cfg : DictConfig
         An omegaconf object that stores the hydra config for the model.
     Returns
@@ -95,7 +114,25 @@ def get_client_fn(
         else:
             raise ValueError(f"Model {cfg.model.name} not supported")
 
-        client = instantiate(cfg.client)
-        return client(model, df, device, cid, cfg.client)
+        client = _get_glient_type(cfg.client.client_type)
+        return client(model, data, device, cid, cfg.client)
 
     return client_fn
+
+def _get_glient_type(client_type: str) -> Callable[[str], Union[NetClient,]]:
+    """Get the client type function."""
+    if client_type == "NetClient":
+        return NetClient
+    else:
+        raise ValueError(f"Client type {client_type} not supported")
+    
+def _get_dataloaders(
+    data: Union[FederatedDataset,], 
+    cfg: DictConfig, 
+    batch_size: int,
+) -> Tuple[DataLoader, DataLoader]:
+    """Get the dataloaders for the training and testing data."""
+    # Get dataloaders
+    trainloader = DataLoader(data.train, batch_size=batch_size, shuffle=True, num_workers=cfg.num_workers)
+    testloader = DataLoader(data.test, batch_size=batch_size, shuffle=False, num_workers=cfg.num_workers)
+    return trainloader, testloader
