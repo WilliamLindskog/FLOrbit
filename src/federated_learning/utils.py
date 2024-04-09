@@ -152,3 +152,21 @@ def _logging_messages(type_log: str, message: str) -> None:
         logger.warning(message)
     else:
         raise ValueError(f"Invalid log type: {type_log}")
+    
+def is_net_model(model_name: str) -> bool:
+    """Check if the model is a neural network model.
+
+    Parameters
+    ----------
+    model_name : str
+        The name of the model to check.
+
+    Returns
+    -------
+    bool
+        Whether the model is a neural network model.
+    """
+    if model_name in ["resnet", "lenet", "vgg"]:
+        return True
+    else: 
+        raise ValueError(f"Model {model_name} is not a neural network model.")

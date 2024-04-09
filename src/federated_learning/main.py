@@ -30,7 +30,7 @@ def main(cfg: DictConfig) -> None:
     # (2) tell each client what dataset partitions they should use (e.g. a this could
     # be a location in the file system, a list of dataloader, a list of ids to extract
     # from a dataset, it's up to you)
-    dataset = load_dataset(cfg.dataset)
+    data = load_dataset(cfg.dataset)
 
     # 3. Define your clients
     # Define a function that returns another function that will be used during
