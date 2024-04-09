@@ -1,6 +1,6 @@
 from flwr_datasets import FederatedDataset, partitioner
 
-from .constants import DATASETS
+from .constants import DATASETS, TARGETS
 
 from typing import Tuple, Union
 from omegaconf import DictConfig
@@ -13,6 +13,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+import torch
 from torch.utils.data import DataLoader
     
 def download_dataset(
@@ -170,3 +171,71 @@ def is_net_model(model_name: str) -> bool:
         return True
     else: 
         raise ValueError(f"Model {model_name} is not a neural network model.")
+
+def train(
+    model: torch.nn.Module, 
+    trainloader: DataLoader, 
+    cfg: DictConfig
+) -> None:
+    """Train the model.
+
+    Parameters
+    ----------
+    model : torch.nn.Module
+        The model to train.
+    trainloader : DataLoader
+        The dataloader for the training data.
+    cfg : DictConfig
+        The configuration file.
+    """
+    # Train the model here
+    pass
+
+def test(
+    model: torch.nn.Module, 
+    testloader: DataLoader, 
+    device: torch.device, 
+    task: str, 
+    evaluate: bool = False
+) -> Tuple[float, dict]:
+    """Test the model.
+
+    Parameters
+    ----------
+    model : torch.nn.Module
+        The model to test.
+    testloader : DataLoader
+        The dataloader for the testing data.
+    device : torch.device
+        The device to use.
+    task : str
+        The task to perform.
+    evaluate : bool, optional
+        Whether to evaluate the model, by default False.
+
+    Returns
+    -------
+    Tuple[float, dict]
+        The loss and the metrics.
+    """
+    # Test the model here
+    pass
+
+def dynamic_configuration(cfg: DictConfig) -> DictConfig:
+    """Add any dynamic configuration needed.
+
+    Parameters
+    ----------
+    cfg : DictConfig
+        The configuration file.
+    """
+    # Add any dynamic configuration here
+    # Add model target path
+    cfg.model._target_ = TARGETS[cfg.model.name]["path"]
+
+    # Add client target path
+    cfg.client._target_ = TARGETS[cfg.model.name]["client_type"]
+
+    
+
+    return cfg

@@ -9,6 +9,8 @@ import hydra
 from omegaconf import DictConfig, OmegaConf
 
 from .dataset import load_dataset
+from .utils import dynamic_configuration
+from .client import get_client_fn
 
 
 @hydra.main(config_path="conf", config_name="base", version_base=None)
@@ -20,6 +22,13 @@ def main(cfg: DictConfig) -> None:
     cfg : DictConfig
         An omegaconf object that stores the hydra config.
     """
+    # 0. Dynamic configuration
+    # You can add here any dynamic configuration you need. For example, you can
+    # change the number of clients, the number of rounds, etc. based on the
+    # dataset you are using. You can also add any other dynamic configuration
+    # you need here.
+    cfg = dynamic_configuration(cfg)
+
     # 1. Print parsed config
     print(OmegaConf.to_yaml(cfg))
 
@@ -35,7 +44,7 @@ def main(cfg: DictConfig) -> None:
     # 3. Define your clients
     # Define a function that returns another function that will be used during
     # simulation to instantiate each individual client
-    # client_fn = client.<my_function_that_returns_a_function>()
+    client_fn = get_client_fn(data, cfg)
 
     # 4. Define your strategy
     # pass all relevant argument (including the global dataset used after aggregation,

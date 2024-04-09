@@ -8,6 +8,7 @@ import torch
 import flwr as fl
 
 from omegaconf import DictConfig
+from hydra.utils import instantiate
 from typing import Callable, Union, OrderedDict, Dict
 
 from flwr.common import Scalar
@@ -15,7 +16,7 @@ from flwr_datasets import FederatedDataset
 
 from torch.cuda import is_available
 
-from .utils import is_net_model
+from .utils import is_net_model, train, test
 
 class NetClient(fl.client.NumPyClient):
     """Flower client implementing FedAvg."""
@@ -32,14 +33,13 @@ class NetClient(fl.client.NumPyClient):
         self.net = net
         self.device = device
         self.cid = int(cid)
-        self.df = df[df.ID == self.cid]
         self.cfg = cfg
 
         self.batch_size = cfg.batch_size
         self.task = cfg.task
 
         # Get dataloaders 
-        self.trainloader, self.testloader = _load_data(self.df, cfg, self.batch_size,)
+        # self.trainloader, self.testloader = _load_data(self.df, cfg, self.batch_size,)
 
     def get_parameters(self, config: Dict[str, Scalar]):
         """Return the current local model parameters."""
@@ -92,10 +92,10 @@ def get_client_fn(
         device = torch.device("cuda:0" if is_available() else "cpu")
         if is_net_model(cfg.model.name): 
             model = instantiate(cfg.model).to(device)
-        else: 
-            model = None
+        else:
+            raise ValueError(f"Model {cfg.model.name} not supported")
 
-        client = _get_client_class(cfg.model_name)
+        client = instantiate(cfg.client)
         return client(model, df, device, cid, cfg.client)
 
     return client_fn

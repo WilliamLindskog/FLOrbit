@@ -34,5 +34,6 @@ def load_dataset(cfg: DictConfig) -> Union[FederatedDataset, Tuple[DataLoader, D
 
     # Check if data must be downloaded
     data = download_dataset(cfg)
+    data = preprocess_data(data, cfg)
 
     return data

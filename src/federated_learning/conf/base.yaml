@@ -12,7 +12,9 @@ dataset:
   partition: iid
 
 model:
-  # model config
+  _target_: None
+  name: resnet
+  version: 18
 
 strategy:
   _target_: # points to your strategy (either custom or exiting in Flower)

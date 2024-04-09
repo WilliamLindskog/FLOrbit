@@ -1,0 +1,15 @@
+num_clients: 3
+task: classification
+dataset:
+  name: remote_sensing
+  num_clients: ${num_clients}
+  partition: iid
+model:
+  _target_: None
+  name: resnet
+  version: 18
+strategy:
+  _target_: null
+client:
+  batch_size: 32
+  task: null
