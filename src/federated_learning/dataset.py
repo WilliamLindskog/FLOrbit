@@ -10,20 +10,21 @@ defined here of course.
 """
 
 from typing import Union, Tuple
+from omegaconf import DictConfig
 
 from flwr_datasets import FederatedDataset
 
 from torch.utils.data import DataLoader
 
-from .utils import data_needs_downloading, download_dataset
+from .utils import download_dataset
 
-def load_dataset(name: str) -> Union[FederatedDataset, Tuple[DataLoader, DataLoader]]:
+def load_dataset(cfg: DictConfig) -> Union[FederatedDataset, Tuple[DataLoader, DataLoader]]:
     """Load the dataset.
 
     Parameters
     ----------
-    name : str
-        The name of the dataset to load.
+    cfg : DictConfig
+        The configuration file.
 
     Returns
     -------
@@ -32,5 +33,6 @@ def load_dataset(name: str) -> Union[FederatedDataset, Tuple[DataLoader, DataLoa
     """
 
     # Check if data must be downloaded
-    if data_needs_downloading(name):
-        download_dataset(name)
+    data = download_dataset(cfg)
+
+    return data

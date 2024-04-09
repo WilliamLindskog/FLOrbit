@@ -1,0 +1,9 @@
+num_clients: 3
+dataset:
+  name: remote_sensing
+  num_clients: ${num_clients}
+  partition: iid
+model: null
+strategy:
+  _target_: null
+client: null

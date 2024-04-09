@@ -1,8 +1,7 @@
-
-
-DOWNLOAD_LINKS = {
+DATASETS = {
     "remote_sensing" : {
-        "flwr_dataset" : False,
-        "link" : "https://tubcloud.tu-berlin.de/s/N76b6FXP2tgtG6W"
+        "flwr_dataset" : True,
+        "link" : "https://huggingface.co/datasets/blanchon/UC_Merced",
+        "hf_name" : "blanchon/UC_Merced",
     },
 }

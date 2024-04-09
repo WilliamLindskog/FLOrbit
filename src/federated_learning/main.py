@@ -8,6 +8,8 @@ model is going to be evaluated, etc. At the end, this script saves the results.
 import hydra
 from omegaconf import DictConfig, OmegaConf
 
+from .dataset import load_dataset
+
 
 @hydra.main(config_path="conf", config_name="base", version_base=None)
 def main(cfg: DictConfig) -> None:
@@ -28,7 +30,7 @@ def main(cfg: DictConfig) -> None:
     # (2) tell each client what dataset partitions they should use (e.g. a this could
     # be a location in the file system, a list of dataloader, a list of ids to extract
     # from a dataset, it's up to you)
-    
+    dataset = load_dataset(cfg.dataset)
 
     # 3. Define your clients
     # Define a function that returns another function that will be used during
