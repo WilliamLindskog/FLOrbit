@@ -1,3 +1,9 @@
 [submodule "flower"]
 	path = flower
 	url = https://github.com/adap/flower.git
+[submodule "examples/techniques"]
+	path = examples/techniques
+	url = https://github.com/satellite-image-deep-learning/techniques.git
+[submodule "examples/Federated-Learning-for-Remote-Sensing"]
+	path = examples/Federated-Learning-for-Remote-Sensing
+	url = https://github.com/anandcu3/Federated-Learning-for-Remote-Sensing.git
